@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/data/schemas/user.schema';
@@ -11,6 +11,8 @@ export class UserRepository {
   ) {}
 
   async createUser(user: AuthDto.SignupReq): Promise<User> {
+    const existingUser = await this.findUserByEmail(user.email);
+    if (existingUser) throw new ConflictException('Email is already in use');
     const newUser = new this.userModel(user);
     return newUser.save();
   }

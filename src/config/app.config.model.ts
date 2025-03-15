@@ -1,36 +1,30 @@
 import { Type } from 'class-transformer';
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsNumber, IsString, ValidateNested } from 'class-validator';
 
 // server object
 export class Server {
-  // @IsString()
+  @IsString()
   Host: string;
-  // @IsNumber()
+  @IsNumber()
   Port: number;
 }
 // end of server
 
 // database object
 export class Database {
-  // @IsString()
+  @IsString()
   Host: string;
 
-  // @IsString()
+  @IsString()
   Username: string;
 
-  // @IsNumber()
+  @IsNumber()
   Port: number;
 
-  // @IsString()
+  @IsString()
   Password: string;
 
-  // @IsString()
+  @IsString()
   Name: string;
 }
 // end of database

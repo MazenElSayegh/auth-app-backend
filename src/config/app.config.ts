@@ -1,13 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import Configuration from './configuration';
-import {
-  IsEnum,
-  IsString,
-  ValidateNested,
-  ValidationError,
-  validate,
-} from 'class-validator';
+import { ValidateNested, ValidationError, validate } from 'class-validator';
 import { Auth, Database, Server } from './app.config.model';
 import { Type, plainToClass } from 'class-transformer';
 
