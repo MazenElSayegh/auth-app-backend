@@ -9,11 +9,17 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
-      whitelist: false, // this should be true once we add validations to all old endpoints
+      whitelist: false,
     }),
   );
   const configService = app.get(ConfigService);
   const config = configService.get<Config>('Config');
-  await app.listen(3000);
+  await app
+    .listen(config?.Server.Port ?? 3000, config?.Server.Host ?? '127.0.0.1')
+    .then(async () => {
+      const url = await app.getUrl();
+      console.log(`Server  running on ${url}`);
+      console.log(`Swagger running on ${url}/api`);
+    });
 }
 bootstrap();
