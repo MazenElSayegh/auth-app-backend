@@ -5,7 +5,9 @@ import { ConfigService } from '@nestjs/config';
 import { Config } from './config/app.config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: { origin: '*', methods: '*' },
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
