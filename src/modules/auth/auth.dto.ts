@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, Matches, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  Matches,
+  MinLength,
+} from 'class-validator';
 
 export namespace AuthDto {
   export class LoginReq {
@@ -31,13 +37,34 @@ export namespace AuthDto {
     password: string;
   }
 
-  export interface Res {
+  export interface LoginRes {
     currentUser: User;
     accessToken: string;
     refreshToken: string;
+    sessionId: string;
   }
+
   export interface User {
-    id: number;
+    name: string;
     email: string;
+  }
+
+  export class Session {
+    @IsNotEmpty({ message: 'Email is required' })
+    @IsEmail({}, { message: 'Invalid email format' })
+    email: string;
+
+    @IsNotEmpty({ message: 'Session id is required' })
+    @IsString({ message: 'Session id should be string' })
+    sessionId: string;
+  }
+
+  export interface SessionReq extends Session {
+    refreshToken: string;
+    expiresAt: Date;
+  }
+
+  export interface RefreshTokenReq extends Session {
+    refreshToken: string | undefined;
   }
 }

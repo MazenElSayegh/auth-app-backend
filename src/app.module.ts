@@ -10,6 +10,7 @@ import Configuration from './config/configuration';
 import { JwtStrategy } from './auth/jwt.strategy';
 import { CommonModule } from './common/common.module';
 import { MongooseOptions } from './data/mongoose.options';
+import { QuoteModule } from './modules/quote/quote.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MongooseOptions } from './data/mongoose.options';
       global: true,
     },
     CommonModule,
+    QuoteModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtStrategy],
