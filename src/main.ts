@@ -3,14 +3,18 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Config } from './config/app.config';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import * as mongoose from 'mongoose';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
+  // origin should be limited to allowed hosts only
   const app = await NestFactory.create(AppModule, {
-    cors: { origin: '*', methods: '*' },
+    cors: {
+      origin: '*',
+      methods: ['GET', 'POST'],
+    },
   });
 
   // Enable query sanitization to prevent NoSQL injection
@@ -20,10 +24,11 @@ async function bootstrap() {
   app.use(helmet());
 
   // Rate limiting middleware
+  // options are made according to business rules
   app.use(
     rateLimit({
       windowMs: 15 * 60 * 1000,
-      max: 100,
+      max: 200,
       message: 'Too many requests, please try again later.',
     }),
   );

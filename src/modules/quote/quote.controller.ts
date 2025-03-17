@@ -13,7 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 @UseGuards(AuthGuard('jwt'))
 @Controller('quote')
 export class QuoteController {
-  constructor(private quoteService: QuoteService) {}
+  constructor(private readonly quoteService: QuoteService) {}
 
   @ApiOperation({ summary: 'Get a random quote' })
   @ApiResponse({ status: 200, description: 'Returns a random quote' })

@@ -35,8 +35,16 @@ export class AuthService {
     const validatedUser = await this.validateUser(user);
     const sessionId = uuidv4();
     const [accessToken, refreshToken] = [
-      this.getSignedAccessToken(validatedUser.email, sessionId),
-      this.getSignedRefreshToken(validatedUser.email, sessionId),
+      this.getSignedToken(
+        validatedUser.email,
+        sessionId,
+        this.appConfig.Config.Auth.Jwt.AccessTokenExpiration,
+      ),
+      this.getSignedToken(
+        validatedUser.email,
+        sessionId,
+        this.appConfig.Config.Auth.Jwt.RefreshTokenExpiration,
+      ),
     ];
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     const decodedRefreshToken = this.jwtService.decode(refreshToken);
@@ -76,7 +84,9 @@ export class AuthService {
     return deleteResult.deletedCount > 0;
   }
 
-  async refreshToken(refreshReq: AuthDto.RefreshTokenReq) {
+  async refreshToken(
+    refreshReq: AuthDto.RefreshTokenReq,
+  ): Promise<AuthDto.RefreshTokenRes> {
     const { email, refreshToken, sessionId } = refreshReq;
     const [user, session] = await Promise.all([
       this.userRepository.findUserByEmail(email),
@@ -98,10 +108,20 @@ export class AuthService {
     if (!isExactSession) {
       throw new UnauthorizedException('Invalid refresh token');
     }
-    return { accessToken: this.getSignedAccessToken(email, sessionId) };
+    return {
+      accessToken: this.getSignedToken(
+        email,
+        sessionId,
+        this.appConfig.Config.Auth.Jwt.AccessTokenExpiration,
+      ),
+    };
   }
 
-  private getSignedAccessToken(email: string, sessionId: string) {
+  private getSignedToken(
+    email: string,
+    sessionId: string,
+    expiresIn: string = '1hr',
+  ): string {
     return this.jwtService.sign(
       {
         email,
@@ -110,21 +130,7 @@ export class AuthService {
       {
         algorithm: 'HS512',
         secret: this.appConfig.Config.Auth.Jwt.Key,
-        expiresIn: '30s',
-      },
-    );
-  }
-
-  private getSignedRefreshToken(email: string, sessionId: string) {
-    return this.jwtService.sign(
-      {
-        sub: email,
-        sessionId,
-      },
-      {
-        algorithm: 'HS512',
-        secret: this.appConfig.Config.Auth.Jwt.Key,
-        expiresIn: '600s',
+        expiresIn,
       },
     );
   }

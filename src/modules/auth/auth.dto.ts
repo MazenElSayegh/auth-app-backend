@@ -80,6 +80,10 @@ export namespace AuthDto {
     refreshToken?: string;
   }
 
+  export interface RefreshTokenRes {
+    accessToken: string;
+  }
+
   export class LoginRes {
     currentUser: User;
     accessToken: string;

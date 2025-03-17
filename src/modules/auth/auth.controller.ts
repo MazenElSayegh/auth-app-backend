@@ -56,11 +56,11 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'New access token issued' })
   @ApiResponse({ status: 401, description: 'Invalid refresh token' })
   refreshToken(@Req() req: Request) {
-    const user = req.user as any;
+    const user = req.user as AuthDto.Session;
     const authHeader = req.headers['authorization'];
     const refreshToken = authHeader?.split(' ')[1];
     return this.authService.refreshToken({
-      email: user.sub,
+      email: user.email,
       sessionId: user.sessionId,
       refreshToken: refreshToken,
     });

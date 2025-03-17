@@ -33,6 +33,12 @@ export class Database {
 export class JWT {
   @IsString()
   Key: string;
+
+  @IsString()
+  AccessTokenExpiration: string;
+
+  @IsString()
+  RefreshTokenExpiration: string;
 }
 export class Auth {
   @ValidateNested()

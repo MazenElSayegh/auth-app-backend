@@ -17,6 +17,8 @@ export default registerAs('Config', () => ({
   Auth: {
     Jwt: {
       Key: process.env.AUTH_JWT_KEY,
+      AccessTokenExpiration: process.env.AUTH_JWT_ACCESS_TOKEN_EXPIRATION,
+      RefreshTokenExpiration: process.env.AUTH_JWT_ACCESS_REFRESH_EXPIRATION,
     },
   },
 }));
