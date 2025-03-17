@@ -4,6 +4,7 @@ import Configuration from './configuration';
 import { ValidateNested, ValidationError, validate } from 'class-validator';
 import { Auth, Database, Server } from './app.config.model';
 import { Type, plainToClass } from 'class-transformer';
+import { LoggerService } from 'src/common/services/logger.service';
 
 export class Config {
   @ValidateNested()
@@ -24,6 +25,7 @@ export class AppConfig implements OnModuleInit {
   constructor(
     @Inject(Configuration.KEY)
     public Config: ConfigType<typeof Configuration>,
+    private readonly logger: LoggerService,
   ) {}
 
   onModuleInit() {
@@ -37,12 +39,12 @@ export class AppConfig implements OnModuleInit {
       const errors: ValidationError[] = await validate(configDto);
 
       if (errors.length > 0) {
-        console.error('Validation errors in the .env file:');
+        this.logger.error('Validation errors in the .env file:');
         this.displayValidationErrors(errors);
         process.exit(1); // Terminate the application if configuration is not valid
       }
     } catch (e) {
-      console.error('An error occurred during validation:', e);
+      this.logger.error('An error occurred during validation:', e);
       process.exit(1); // Terminate the application if an error occurs
     }
   }
@@ -50,7 +52,7 @@ export class AppConfig implements OnModuleInit {
   displayValidationErrors(errors: ValidationError[], parentProperty = '') {
     errors.forEach((error) => {
       if (error.constraints) {
-        console.error(
+        this.logger.error(
           `- Property "${parentProperty}${error.property}" failed validation: ${Object.values(
             error.constraints,
           ).join(', ')}`,
