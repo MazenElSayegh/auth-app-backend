@@ -78,15 +78,17 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@App/(.*)$": "<rootDir>/src/$1"
+    },
+    "extensionsToTreatAsEsm": [
+      ".ts",
+      ".tsx"
     ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "coverageDirectory": "../coverage"
   }
 }

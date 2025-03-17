@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CommonHelper } from 'src/common/common.helper';
-import { QuotesConstants } from 'src/common/constants/quote.constants';
+import { CommonHelper } from '../../common/common.helper';
+import { QuotesConstants } from '../../common/constants/quote.constants';
 
 @Injectable()
 export class QuoteService {

@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthDto } from './auth.dto';
-import { UserRepository } from 'src/repositories/user.repository';
-import { AppConfig } from 'src/config/app.config';
-import { SessionRepository } from 'src/repositories/session.repository';
+import { UserRepository } from '../../repositories/user.repository';
+import { AppConfig } from '../../config/app.config';
+import { SessionRepository } from '../../repositories/session.repository';
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 
@@ -48,7 +48,7 @@ export class AuthService {
     ];
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     const decodedRefreshToken = this.jwtService.decode(refreshToken);
-    const expiresAt = new Date(decodedRefreshToken.exp * 1000);
+    const expiresAt = new Date(decodedRefreshToken?.exp * 1000);
     await this.sessionRepository.createSession({
       email: validatedUser.email,
       refreshToken: hashedRefreshToken,

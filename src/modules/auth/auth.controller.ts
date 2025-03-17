@@ -11,7 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { AuthDto } from './auth.dto';
 import { Request } from 'express';
-import { RefreshTokenGuard } from 'src/guards/refreshToken.guard';
+import { RefreshTokenGuard } from '../../guards/refreshToken.guard';
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('Auth')

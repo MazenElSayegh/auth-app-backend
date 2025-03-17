@@ -4,7 +4,7 @@ import Configuration from './configuration';
 import { ValidateNested, ValidationError, validate } from 'class-validator';
 import { Auth, Database, Server } from './app.config.model';
 import { Type, plainToClass } from 'class-transformer';
-import { LoggerService } from 'src/common/services/logger.service';
+import { LoggerService } from '../common/services/logger.service';
 
 export class Config {
   @ValidateNested()
