@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Config } from './config/app.config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { LoggerService } from './common/services/logger.service';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import * as mongoose from 'mongoose';
@@ -54,6 +55,20 @@ async function bootstrap() {
   // Load configuration
   const configService = app.get(ConfigService);
   const config = configService.get<Config>('Config');
+
+  const logger = app.get(LoggerService);
+
+  // Log unhandled rejection events
+  process.on('unhandledRejection', async (error: any) => {
+    logger.error('Unhandled rejection', error);
+    process.exit(1); // Exit for a restart by supervisor
+  });
+
+  // Log uncaught exception events
+  process.on('uncaughtException', async (error: any) => {
+    logger.error('Uncaught exception', error);
+    process.exit(1); // Exit for a restart by supervisor
+  });
 
   // Start app
   await app

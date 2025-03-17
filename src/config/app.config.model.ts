@@ -1,10 +1,18 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsString, ValidateNested } from 'class-validator';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
 // server object
 export class Server {
+  @IsOptional()
   @IsString()
   Host: string;
+
+  @IsOptional()
   @IsNumber()
   Port: number;
 }
@@ -15,12 +23,14 @@ export class Database {
   @IsString()
   Host: string;
 
-  @IsString()
-  Username: string;
-
   @IsNumber()
   Port: number;
 
+  @IsOptional()
+  @IsString()
+  Username: string;
+
+  @IsOptional()
   @IsString()
   Password: string;
 
