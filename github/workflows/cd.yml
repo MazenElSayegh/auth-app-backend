@@ -1,0 +1,35 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t mazensayegh/nestjs-app .
+          docker tag mazensayegh/nestjs-app mazensayegh/nestjs-app:latest
+          docker push mazensayegh/nestjs-app:latest
+
+      - name: SSH into EC2 and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull mazensayegh/nestjs-app:latest
+            docker stop nestjs-app || true
+            docker rm nestjs-app || true
+            docker run -d --name nestjs-app -p 3000:3000 mazensayegh/nestjs-app:latest
